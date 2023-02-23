@@ -3,7 +3,7 @@
         <div class="l-content">
             <el-button @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
             <!-- 面包屑 -->
-            <span class="text">首页</span>
+            <span class="text">{{navigatorTitle}}</span>
         </div>
         <div class="r-content">
             <el-dropdown>
@@ -23,6 +23,11 @@ export default {
     methods: {
         handleMenu(){
             this.$store.commit('collaseMenu')
+        }
+    },
+    computed: {
+        navigatorTitle(){
+           return this.$store.state.tab.navigatorTitle
         }
     }
 }

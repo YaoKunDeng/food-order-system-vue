@@ -3,7 +3,7 @@
         <el-menu default-active="1-4-1" class="el-menu-vertical-demo" 
         @open="handleOpen" 
         @close="handleClose" 
-        :collapse="isCollapse"
+        :collapse="isCollapse"  
         style="text-align: left;"
         background-color="#545c64"
         text-color="#fff"
@@ -87,12 +87,14 @@
           console.log(key, keyPath);
         },
         clickMenu(item){
-          console.log("点击菜单选项")
+          
           // 当页面的路由与跳转的路由不一致才允许跳转
           
-          if(this.$router.currentRoute.path!=item.path && (this.$router.currentRoute.path==='/home'&&this.$router.currentRoute.path==='/')){
+          if(this.$router.currentRoute.path!=item.path && (item.path!='/home'||this.$router.currentRoute.path!='/')){
+            
             this.$router.push(item.path)
           }
+          this.$store.commit("switchNavigator",item)
           
         }
       },

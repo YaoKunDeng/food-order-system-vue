@@ -9,6 +9,7 @@ import Main from '../views/Main.vue'
 import Mall from '../views/Mall.vue'
 import PageOne from '../views/PageOne.vue'
 import PageTwo from '../views/PageTwo.vue'
+import Login from '../views/Login.vue'
 
 // 3、将路由与组件进行映射
 // 4、创建Router实例，将映射路径放进去
@@ -29,6 +30,11 @@ const routes = [
         {path: 'page1', component: PageOne}, //页面1
         {path: 'page2', component: PageTwo} //页面2
     ]
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: Login
     }
     
     
