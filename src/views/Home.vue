@@ -50,7 +50,8 @@
 </template>
 <script>
     import OrderCount from '../components/OrderCount.vue';
-    import { getData } from '../api';
+    // import { getData } from '../api';
+    
 export default {
     components:{
         OrderCount
@@ -61,10 +62,12 @@ export default {
         }
     },
     mounted(){
-        getData().then(({data})=>{
-            const {tableData} = data.data
-            this.tableData = tableData
-        })
+        // getData().then(({data})=>{
+        //     const {tableData} = data.data
+        //     this.tableData = tableData
+        // })
+        
+        
     }
 }
 </script>

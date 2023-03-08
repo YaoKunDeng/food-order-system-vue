@@ -15,13 +15,27 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
+import { validTicket } from './api'
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  
+  mounted() {
+    let token = this.$store.state.userInfo.token
+    
+    if(token===null||token===''){
+      this.$router.replace("/login")
+    }
+    
+    if(token!=null || token !=''){
+      validTicket({}).then((response)=>{
+        console.log("APP",response)
+        //如果session过期，就跳转登录页面
+        if(response.data.code!=200)
+          this.$router.replace("/login")
+      })
+    }
+  },
 }
 </script>
 

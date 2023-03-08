@@ -4,13 +4,15 @@
             <el-button @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
             <!-- 面包屑 -->
             <span class="text">{{navigatorTitle}}</span>
+            
         </div>
         <div class="r-content">
             <el-dropdown>
                 <span class="el-dropdown-link">
-                    <img class="user" src="../assets/images/user.jpg" alt="">
+                    <img v-if="JSON.stringify(userInfo)!=='{}'" class="user" src="../assets/images/user.jpg" alt="">
+                    <el-button v-else type="info" @click="login">登录</el-button>
                 </span>
-                <el-dropdown-menu slot="dropdown">
+                <el-dropdown-menu :slot="JSON.stringify(userInfo)=='{}'? '':dropdown">
                     <el-dropdown-item>个人中心</el-dropdown-item>
                     <el-dropdown-item>退出</el-dropdown-item>
                 </el-dropdown-menu>
@@ -23,11 +25,19 @@ export default {
     methods: {
         handleMenu(){
             this.$store.commit('collaseMenu')
+            console.log(JSON.stringify(userInfo)=='{}')
+        },
+        login(){
+            this.$router.replace("/login")
         }
     },
+    
     computed: {
         navigatorTitle(){
            return this.$store.state.tab.navigatorTitle
+        },
+        userInfo(){
+            return this.$store.state.userInfo.userInfo
         }
     }
 }

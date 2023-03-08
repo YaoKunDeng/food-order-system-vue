@@ -8,11 +8,23 @@
             <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-           <el-button type="primary">登录</el-button>
+           <el-button type="primary" @click="login">登录</el-button>
         </el-form-item>
+        <el-dialog
+        title="提示"
+        :visible.sync="centerDialogVisible"
+        width="30%"
+        center>
+        <span>{{message}}</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        </span>
+        </el-dialog>
     </el-form>
 </template>
 <script>
+import { use } from 'echarts';
+import { login } from '../api';
 export default {
     data() {
         return {
@@ -27,9 +39,47 @@ export default {
                 password: [
                     {required: true, trigger: 'blur', message: '请输入密码'}
                 ]
-            }
+            },
+            centerDialogVisible: false,
+            message: ''
         }
     },
+    methods: {
+        login(){
+            let num = 5;
+            let message = "登录成功，5秒后跳转登录页面......"
+            
+            login(this.form).then((response)=>{
+                console.log("login:",response)
+                this.message = message;
+                if(response.data.code === 200){
+                    this.centerDialogVisible = true
+                    localStorage.setItem("token",response.data.data.token)
+                    localStorage.setItem("userInfo",JSON.stringify(response.data.data.userInfo))
+                    this.$store.commit("setUserInfo",JSON.stringify(response.data.data.userInfo))
+                    this.$store.commit("setToken",response.data.data.token)
+                    
+                   let timer = setInterval(()=>{
+                        num = num -1
+                        this.message = '登录成功，'+num+'秒后跳转登录页面......'
+                        if(num==0){
+                            clearInterval(timer)
+                            this.$router.replace('/home')
+                            this.centerDialogVisible = false  
+                        }
+                    },1000)
+                }else{
+                    this.message = response.data.message
+                    this.centerDialogVisible = true;
+                }
+                
+            }).catch(err=>{
+                console.log(err)
+                this.message = '服务器出错，请联系管理员'
+                this.centerDialogVisible = true
+            })
+        }
+    }
 }
 </script>
 <style lang="less">

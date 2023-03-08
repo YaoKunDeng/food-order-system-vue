@@ -1,8 +1,15 @@
 import axios from "axios";
 
+
 const http = axios.create({
-    baseURL: '/api',
+    baseURL:"/api", //在配置代理的时候去掉了
     timeout: 10000, //超时时间
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      "Accept": 'application/json',
+      "token" : localStorage.getItem("token")
+    }
 })
 
 // 添加请求拦截器
