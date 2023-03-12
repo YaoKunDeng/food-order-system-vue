@@ -33,9 +33,10 @@ const routes = [
             path: 'mall', 
             name: 'mall', 
             component: Mall,
+            redirect: '/mall/goodsList',
             children: [
                 { path: 'goodsList', name: 'goodsList', component:  GoodsList},
-                { path: 'goodCategorize', name: 'goodCategorize', component:  GoodCategorize}
+                { path: 'goodsCategorize', name: 'goodsCategorize', component:  GoodCategorize}
             ]
         }, //商品管理
         {path: 'page1', name: 'page1', component: PageOne}, //页面1

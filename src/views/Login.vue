@@ -24,7 +24,7 @@
 </template>
 <script>
 import { use } from 'echarts';
-import { login } from '../api';
+import { login, getStore } from '../api';
 export default {
     data() {
         return {
@@ -58,17 +58,41 @@ export default {
                     localStorage.setItem("userInfo",JSON.stringify(response.data.data.userInfo))
                     this.$store.commit("setUserInfo",JSON.stringify(response.data.data.userInfo))
                     this.$store.commit("setToken",response.data.data.token)
-                    
-                   let timer = setInterval(()=>{
-                        num = num -1
-                        this.message = '登录成功，'+num+'秒后跳转登录页面......'
-                        if(num==0){
-                            clearInterval(timer)
-                            this.$router.replace('/home')
-                            this.centerDialogVisible = false  
+                    //获取并存储店铺信息
+                    let data = {
+                        params:{
+                            id : response.data.data.userInfo.id
                         }
-                    },1000)
+                    }
+                     
+                    getStore(data).then((res)=>{
+                         console.log(res)
+                        if(res.data.code==200){
+                            localStorage.setItem("store",JSON.stringify(res.data.data))
+                            this.$store.commit("setStore",JSON.stringify(res.data.data))
+                            let timer = setInterval(()=>{
+                                num = num -1
+                                this.message = '登录成功，'+num+'秒后跳转登录页面......'
+                                if(num==0){
+                                    clearInterval(timer)
+                                    this.$router.replace('/home')
+                                    this.centerDialogVisible = false  
+                                }
+                                },1000)
+                        }else{
+                            console.log("err")
+                            this.message = res.data.message
+                            this.centerDialogVisible = true;
+                        }
+                        
+                    }).catch(err=>{
+                        console.log(err)
+                        this.message = '获取店铺信息失败，请联系管理员'
+                        this.centerDialogVisible = true
+                    })
+                   
                 }else{
+                    console.log("err")
                     this.message = response.data.message
                     this.centerDialogVisible = true;
                 }

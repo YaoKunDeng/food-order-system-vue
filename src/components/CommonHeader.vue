@@ -12,7 +12,7 @@
                     <img v-if="JSON.stringify(userInfo)!=='{}'" class="user" src="../assets/images/user.jpg" alt="">
                     <el-button v-else type="info" @click="login">登录</el-button>
                 </span>
-                <el-dropdown-menu :slot="JSON.stringify(userInfo)=='{}'? '':dropdown">
+                <el-dropdown-menu :slot="JSON.stringify(userInfo)=='{}'? '': 'dropdown'">
                     <el-dropdown-item>个人中心</el-dropdown-item>
                     <el-dropdown-item>退出</el-dropdown-item>
                 </el-dropdown-menu>
@@ -22,6 +22,7 @@
 </template>
 <script>
 export default {
+    
     methods: {
         handleMenu(){
             this.$store.commit('collaseMenu')

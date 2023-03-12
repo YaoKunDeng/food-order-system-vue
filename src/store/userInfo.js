@@ -1,10 +1,11 @@
-import { getToken, getUserInfo } from "@/utils/auth"
+import { getToken, getUserInfo, getStore } from "@/utils/auth"
 
 
 export default{
     state:{
         token: ''|| getToken(),
-        userInfo: getUserInfo() || {}
+        userInfo: getUserInfo() || {},
+        store: getStore() || {}
     },
     mutations:{
         setUserInfo(state,value){
@@ -12,6 +13,9 @@ export default{
         },
         setToken(state,value){
             state.session = value
+        },
+        setStore(state, value){
+            state.store = JSON.parse(value)
         }
     },
     

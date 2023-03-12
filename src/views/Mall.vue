@@ -1,6 +1,6 @@
 <template lang="en">
     <div class="container">
-        <div class="categorize">
+        <div class="menu-item">
             <el-button type="primary" @click="goodsList">商品列表</el-button>
             <el-button type="primary" @click="goodsCategorize">商品分类</el-button>
         </div>
@@ -12,7 +12,11 @@
 export default {
     methods: {
         goodsList(){
+           
+        },
+        goodsCategorize(){
             console.log(this.$router)
+            this.$router.push("/mall/goodsCategorize")
         }
     },
 }
@@ -22,15 +26,9 @@ export default {
         padding: 0;
     }
     .container{
-        display: flex;
-        .categorize{
-            font-size: 16px;
-            margin: 0 5px;
-            font-weight: 500;
-        }
-        .categorize:hover{
-            color: aqua;
-            
+        text-align: left;
+        .menu-item{
+            margin-bottom: 20px;
         }
     }
 </style>

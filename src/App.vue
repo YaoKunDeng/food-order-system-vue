@@ -31,8 +31,15 @@ export default {
       validTicket({}).then((response)=>{
         console.log("APP",response)
         //如果session过期，就跳转登录页面
-        if(response.data.code!=200)
+        if(response.data.code!=200){
+          this.$message({
+            message: response.data.message,
+            center: true
+          })
           this.$router.replace("/login")
+        }
+
+          
       })
     }
   },
