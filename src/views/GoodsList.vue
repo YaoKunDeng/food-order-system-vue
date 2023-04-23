@@ -23,8 +23,13 @@
           align="center"
           >
           <template slot-scope="scope">
-               <!-- <img :src="scope.row.image" min-width="70" height="70"/> -->
-               <img src="https://i.postimg.cc/V6KfmDRX/food.png" min-width="70" height="70"/>
+               <img :src="scope.row.image" min-width="70" height="70"/>
+               <!-- <img src="../upload/2446978623e84554861852690fe14b72.jpg" min-width="70" height="70"/> -->
+               
+               <!-- <img src="https://i.postimg.cc/V6KfmDRX/food.png" min-width="70" height="70"/> -->
+               <!-- <img src="E:\Code\JAVA\order-food-system\upload\2b4b41c8852d486f84255b3db50c9403.jpg" min-width="70" height="70"/> -->
+               
+                 
        </template>
         </el-table-column>
           <el-table-column
@@ -93,6 +98,8 @@
                 :on-error = "handleErr"
                 :file-list="fileList"
                 :limit="1"
+                :auto-upload="false"
+                ref="upload"
                 :on-exceed="handleExceed">
                 <el-button size="small" type="primary">点击上传</el-button>
                
@@ -181,21 +188,26 @@ export default {
     }
   },
   mounted() {
-     
     let data = {
       params :{
         storeId: this.store.id
       }
     }
-    console.log(data)
+    
     getDishes(data).then((res)=>{
       console.log(res)
+      res.data.data.forEach((v,i)=>{
+        res.data.data[i].image = require('../upload/'+v.image)
+        
+      })
+      
       this.tableData = res.data.data
       this.$message({
         message : res.data.message,
         center: true
       })
     }).catch((err)=>{
+      console.log(err)
        this.$message({
         message : "获取商品列表失败！",
         center: true
@@ -207,19 +219,45 @@ export default {
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
      handleChange(file, fileList) {
+        if(fileList.length!=0){
+          this.rules.image = undefined
+        }
         this.fileList = fileList.slice(-3);
       },
     // 文件上传成功钩子
-    handleSuccess(response, file, fileList){
+    handleSuccess(response){
       if(response.code===200){
+        console.log(response.data)
         this.formData.image = response.data
-        this.rules.image = undefined
+        addDish(this.formData).then(res=>{
+              
+              if(res.data.code===200){
+                this.tableData.push(this.formData)
+              }
+              this.$message({
+                message: res.data.message,
+                center: true
+              })
+              this.formData = {}
+              this.fileList = []
+              this.dialogTableVisible = false
+              
+            }).catch(err=>{
+              console.log(err)
+              this.$message({
+                 message: "添加商品失败！",
+                center: true
+              })
+              this.fileList = []
+              this.dialogTableVisible = false
+              this.formData = {}
+            })
       }
-      console.log(this.fileList)
       this.$message({
         message: response.message,
         center: true
       })
+      
     },
     //文件上传错误钩子
     handleErr(err, file, fileList){
@@ -235,7 +273,7 @@ export default {
     handleAdd(){
       this.dialogType = 0
       this.dialogTableVisible=true
-      console.log(this.store.id)
+      
       let data = {
         params:{
           storeId: this.store.id
@@ -260,7 +298,7 @@ export default {
     handleEdit(index, row){
       this.dialogTableVisible = true
       this.dialogType = 1
-      console.log(row)
+      
       this.formData = row
       this.fileList.push({
         name:row.image.substr(row.image.length-15,row.image.length),
@@ -298,7 +336,7 @@ export default {
           this.tableData = this.tableData.filter(item=>{
                   return item.id != row.id
               })
-              console.log(this.tableData)
+              
                 
         }
         this.$message({
@@ -322,32 +360,12 @@ export default {
             let option = this.options.filter(item=>{
               return item.value===this.formData.menuId
             })
-            console.log(option)
-            this.formData.menuName = option[0].label
             
-            addDish(this.formData).then(res=>{
-              console.log(this.formData)
-              if(res.data.code===200){
-                this.tableData.push(this.formData)
-              }
-              this.$message({
-                message: res.data.message,
-                center: true
-              })
-              this.formData = {}
-              this.fileList = []
-              this.dialogTableVisible = false
-              
-            }).catch(err=>{
-              console.log(err)
-              this.$message({
-                 message: "添加商品失败！",
-                center: true
-              })
-              this.fileList = []
-              this.dialogTableVisible = false
-              this.formData = {}
-            })
+            this.formData.menuName = option[0].label
+            //在这里上传图片,上传图片成功之后，在将数据存入数据库
+            this.$refs.upload.submit();  //这里有一个回调函数，为handleSuccess
+            
+            
           }
           if(this.dialogType === 1){
             updateDish(this.formData).then(res=>{
