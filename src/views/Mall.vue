@@ -12,7 +12,7 @@
 export default {
     methods: {
         goodsList(){
-           
+           this.$router.push("/mall/goodsList")
         },
         goodsCategorize(){
             console.log(this.$router)

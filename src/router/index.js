@@ -7,6 +7,7 @@ import Home from '../views/Home.vue'
 import User from '../views/User.vue'
 import Main from '../views/Main.vue'
 import Mall from '../views/Mall.vue'
+import My from '../views/My.vue'
 import PageOne from '../views/PageOne.vue'
 import PageTwo from '../views/PageTwo.vue'
 import Login from '../views/Login.vue'
@@ -39,6 +40,7 @@ const routes = [
                 { path: 'goodsCategorize', name: 'goodsCategorize', component:  GoodCategorize}
             ]
         }, //商品管理
+        {path: 'my', name: 'my', component: My}, //个人信息
         {path: 'page1', name: 'page1', component: PageOne}, //页面1
         {path: 'page2', name: 'page2', component: PageTwo} //页面2
     ]

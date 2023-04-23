@@ -57,6 +57,13 @@
                 icon: 'user',
                 url: 'UserManage/UserManage'
                 },
+                // {
+                // path: '/store',
+                // name: 'store',
+                // label: '店铺管理',
+                // icon: 's-home',
+                // url: 'StoreManage/StoreManage'
+                // },
                 {
                 label: '其他',
                 icon: 'location',

@@ -93,7 +93,7 @@ export default {
    
     let data = {
             params :{
-                storeId : localStorage.getItem("store").id
+                storeId : this.store.id
             }
         }
     getMenus(data).then(res=>{

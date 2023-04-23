@@ -7,14 +7,14 @@
             
         </div>
         <div class="r-content">
-            <el-dropdown>
+            <el-dropdown  @command="handleCommand">
                 <span class="el-dropdown-link">
                     <img v-if="JSON.stringify(userInfo)!=='{}'" class="user" src="../assets/images/user.jpg" alt="">
                     <el-button v-else type="info" @click="login">登录</el-button>
                 </span>
                 <el-dropdown-menu :slot="JSON.stringify(userInfo)=='{}'? '': 'dropdown'">
-                    <el-dropdown-item>个人中心</el-dropdown-item>
-                    <el-dropdown-item>退出</el-dropdown-item>
+                    <el-dropdown-item command="myInfo">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="login">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -29,7 +29,15 @@ export default {
             console.log(JSON.stringify(userInfo)=='{}')
         },
         login(){
+            console.log("ddd")
             this.$router.replace("/login")
+        },
+        handleCommand(command){
+            if(command==="login"){
+                this.$router.replace("/login")
+            }else{
+                this.$router.replace("/my")
+            }
         }
     },
     

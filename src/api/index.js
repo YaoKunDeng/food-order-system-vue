@@ -27,6 +27,10 @@ import http from "../utils/request";
 export const addUser = (params)=>{
     return http.post('/register',params)
 }
+//更改店铺用户信息
+export const updateUser =(params)=>{
+    return http.post('/update/user',params)
+}
 
 // 注册
 export const login =(params)=>{
@@ -41,6 +45,11 @@ export const validTicket = (params)=>{
 //获取店铺信息
 export const getStore = (params)=>{
     return http.get('/store/get',params)
+}
+
+//更改店铺信息
+export const updateStore = (params)=>{
+    return http.post('/store/update',params)
 }
 
 //添加商品类别

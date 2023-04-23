@@ -22,6 +22,10 @@
           label="图片"
           align="center"
           >
+          <template slot-scope="scope">
+               <!-- <img :src="scope.row.image" min-width="70" height="70"/> -->
+               <img src="https://i.postimg.cc/V6KfmDRX/food.png" min-width="70" height="70"/>
+       </template>
         </el-table-column>
           <el-table-column
           prop="oldPrice"
@@ -46,8 +50,10 @@
           label="操作"
           align="center" >
           <template slot-scope="scope">
-              <el-button type="info" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <div>
+                <el-button type="info" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button type="danger" size="mini"  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </div>
           </template>
           </el-table-column>
       </el-table>
