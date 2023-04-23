@@ -91,3 +91,13 @@ export const updateDish = (params) => {
 export const delDish = (params) => {
     return http.get("/mall/del/dish", params)
 }
+
+//获取所有微信用户
+export const getWxUser = (params) => {
+    return http.get("/wx/users")
+}
+
+//删除指定用户
+export const delWxUser = (params) =>{
+    return http.get('/wx/delUser',params)
+}
