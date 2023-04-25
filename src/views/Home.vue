@@ -11,8 +11,9 @@
                         </div>
                     </div>
                     <div class="login-info">
-                        <p>上次登录时间：<span>2023-2-18</span></p>
-                        <p>上次登录地点：<span>武汉</span></p>
+                        <!-- <p>上次登录时间：<span>2023-2-18</span></p>
+                        <p>上次登录地点：<span>广东</span></p> -->
+                        <p>欢饮使用后台管理系统</p>
                     </div>
                   </el-card>
                   <!-- table -->
@@ -22,22 +23,22 @@
                             :data="tableData"
                             style="width: 100%;">
                             <el-table-column
-                                prop="name"
-                                label="课程"
+                                prop="dishName"
+                                label="菜品"
                                 >
                             </el-table-column>
                             <el-table-column
-                                prop="todayBuy"
+                                prop="todaySales"
                                 label="今日购买"
                                 >
                             </el-table-column>
                             <el-table-column
-                                prop="monthBuy"
+                                prop="monthSales"
                                 label="本月购买"
                                 >
                             </el-table-column>
                             <el-table-column
-                                prop="totalBuy"
+                                prop="totalSales"
                                 label="总购买"
                                >
                             </el-table-column>
@@ -50,7 +51,7 @@
 </template>
 <script>
     import OrderCount from '../components/OrderCount.vue';
-    // import { getData } from '../api';
+    import { getSalesTable } from '../api';
     
 export default {
     components:{
@@ -66,6 +67,17 @@ export default {
         //     const {tableData} = data.data
         //     this.tableData = tableData
         // })
+        getSalesTable({}).then(res=>{
+            if(res.data.code===200){
+                this.tableData = res.data.data
+            }else{
+                this.$message(res.data.message)
+            }
+        }).catch(err=>{
+            console.log(err)
+            this.$message("获取售卖数据表格汇总失败")
+        })
+        
         
         
     }

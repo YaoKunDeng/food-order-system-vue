@@ -11,164 +11,171 @@
       </div>
       <el-card style="height: 280px;">
         <!-- 折线图 -->
-        <div ref="echarts1" style="height: 280px;"></div>
+        <div ref="lineChart" style="height: 280px;"></div>
       </el-card>
       <div class="graph">
         <el-card style="height: 260px;">
-          <div ref="echarts2" style="height: 260px;"></div>
+          <div ref="barGraph" style="height: 260px;"></div>
         </el-card>
         <el-card style="height: 260px;">
-          <div ref="echarts3" style="height: 240px;"></div>
+          <div ref="pieChart" style="height: 240px;"></div>
         </el-card>
       </div>
     </div>
 </template>
 <script>
-import { getData } from "../api";
+import { getSalesTotal, getLineChartData, getBarGraphData } from "../api";
 import * as echarts from "echarts";
+import {parseDate} from '../utils/timeUtils.js';
 export default {
   data() {
     return {
       countData: [
         {
-          name: "今日支付订单",
+          name: "今日营业额",
           value: 1234,
           icon: "success",
           color: "#2ec7c9",
         },
         {
-          name: "今日收藏订单",
+          name: "本月营业额",
           value: 210,
           icon: "star-on",
           color: "#ffb980",
         },
         {
-          name: "今日未支付订单",
+          name: "总营业额",
           value: 1234,
           icon: "s-goods",
           color: "#5ab1ef",
         },
-        {
-          name: "本月支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
-        },
-        {
-          name: "本月收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
-        },
-        {
-          name: "本月未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
-        },
+        // {
+        //   name: "本月支付订单",
+        //   value: 1234,
+        //   icon: "success",
+        //   color: "#2ec7c9",
+        // },
+        // {
+        //   name: "本月收藏订单",
+        //   value: 210,
+        //   icon: "star-on",
+        //   color: "#ffb980",
+        // },
+        // {
+        //   name: "本月未支付订单",
+        //   value: 1234,
+        //   icon: "s-goods",
+        //   color: "#5ab1ef",
+        // },
       ],
     };
   },
   mounted() {
-    getData().then(({ data }) => {
-      // 基于准备好的dom。 初始化echarts实例
-      const echats1 = echarts.init(this.$refs.echarts1);
-      // 指定图表的配置项和数据
-      var echarts1Option = {};
-      // 处理数据XAxis
-      const { orderData, userData, videoData } = data.data;
-      const xAxis = Object.keys(orderData.data[0]);
-      echarts1Option.xAxis = {
-        data: xAxis,
-      };
-      echarts1Option.yAxis = {};
-      echarts1Option.legend = {
-        data: xAxis,
-      };
-      echarts1Option.tooltip = {};
-      echarts1Option.series = [];
-      // 如果想返回一个对象，那么就直接用对象的方式去写
-      xAxis.forEach((key) => {
-        echarts1Option.series.push({
-          name: key,
-          data: orderData.data.map((item) => item[key]),
-          type: "line",
-        });
-      });
+    //获取顶部标签的数据
+    getSalesTotal({}).then(res=>{
+      console.log(res)
+      this.countData[0].value = res.data.data.todaySales
+      this.countData[1].value = res.data.data.monthSales
+      this.countData[2].value = res.data.data.totalSales
+    })
 
-      // 使用刚指定的配置和数据显示图标
-      echats1.setOption(echarts1Option);
-
-      // 柱状图
-      // 基于准备好的dom。 初始化echarts实例
-      const echats2 = echarts.init(this.$refs.echarts2);
-
-      
-      //数据处理
-      const xAxis1 = userData.map((value) => {
-        return value.date;
-      });
-
-      // 配置echat2Options
-      var echats2Options = {
-        tooltip: {},
-        legend: {
-          data: ['新增用户','活跃用户'],
-        },
-        xAxis: {
-          type: 'category',
-          data: xAxis1,
-          axisLine: {
-            lineStyle: {
-              color: '#17b3a3'
-            }
-          },
-          axisLable: {
-            interval: 0,
-            color : '#333'
-          }
-        },
-        yAxis: {
+    //获取折线图数据
+    getLineChartData({}).then(res=>{
+      if(res.data.code===200){
+        //基于准备好的dom，初始化echarts实例
+        const lineChart = echarts.init(this.$refs.lineChart)
+        //指定图标的配置项和数据
+        var lineChartOption = {};
+        //处理数据XAxis
+        const xAxis = res.data.data.map(currentValue=>{
+         return parseDate(currentValue.date)
+        })
+        lineChartOption.xAxis={
+          data: xAxis,
+          name: '日期'
+          
+        }
+        lineChartOption.tooltip={
+          trigger: 'axis',
+          axisPointer: { type: 'cross' },
+        }
+        
+        lineChartOption.yAxis={
           type: 'value',
-          axisLine: {
-            lineStyle: '#17b3a3'
-          }
-        },
-        color: ['#2ec7c9', '#b6a2de'],
-        series: [
-          {
-            name: "新增用户",
-            type: 'bar',
-            data: userData.map((item) => item.new),
-          },
-          {
-            name: "活跃用户",
-            type: 'bar',
-            data: userData.map((item) => item.active),
-          },
-        ],
-      };
-
-      echats2.setOption(echats2Options)
-
-      // 扇形图
-      // 初始化echats
-      const echarts3 = echarts.init(this.$refs.echarts3)
-      
-      var echarts3Option = {
-        tooltip: {
-          trigger: "item",
-        },
-        series: [
-          {
-            type: 'pie',
-            data: videoData,
-            
-          }
-        ]
+          name: '销售额'
+        }
+        
+        lineChartOption.series =[]
+        lineChartOption.series.push({
+            data: res.data.data.map(item=>{
+              return item.turnover
+            }),
+            type: "line",
+          })
+        lineChart.setOption(lineChartOption)
+      }else{
+        this.$message(res.data.$message)
       }
-      echarts3.setOption(echarts3Option)
-    });
+    }).catch(err=>{
+      console.log(err)
+    })
+    
+    //获取折线柱状图信息
+    //获取柱状图以及处理扇形图
+    getBarGraphData({}).then(res=>{
+      if(res.data.code===200){
+        //处理柱状图
+        const barGraph =echarts.init(this.$refs.barGraph);
+        const barGraphOptions = {}
+        //处理x轴
+        const xAxis = res.data.data.map(currentValue=>{
+            return currentValue.dishName
+          })
+          
+        barGraphOptions.xAxis = {
+          data : xAxis
+        }
+        barGraphOptions.tooltip={
+            trigger: 'axis',
+            axisPointer: { type: 'cross' },
+          }
+        //处理y轴
+        barGraphOptions.yAxis = {}
+        //处理y轴数据
+        barGraphOptions.series = []
+        barGraphOptions.series.push({
+          type: 'bar',
+          data: res.data.data.map(currentValue=>{
+            return currentValue.number
+          })
+        })
+        barGraph.setOption(barGraphOptions)
+
+        //处理饼状图
+        const pieChart = echarts.init(this.$refs.pieChart)
+        const pieChartOption= {}
+        pieChartOption.tooltip={
+            trigger: 'item'
+          }
+        pieChartOption.series = []
+        pieChartOption.series.push({
+            type: 'pie',
+            data: res.data.data.map(currentValue=>{
+              return {
+                value: currentValue.number,
+                name: currentValue.dishName
+              }
+            })
+          })
+        
+        pieChart.setOption(pieChartOption)
+      }else{
+        this.$message(res.data.message)
+      }
+    }).catch(err=>{
+      console.log(err)
+    })
+
   },
 };
 </script>

@@ -101,3 +101,24 @@ export const getWxUser = (params) => {
 export const delWxUser = (params) =>{
     return http.get('/wx/delUser',params)
 }
+//获取数据
+
+//获取售卖数据table按菜品名称分布
+export const getSalesTable = (params) =>{
+    return http.get('/sales/table',params)
+}
+
+//获取总营业额
+export const getSalesTotal = (params)=>{
+    return http.get('/sales/total',params)
+}
+
+//获取折线图数据
+export const getLineChartData = (params)=>{
+    return http.get('/sales/line/chart',params)
+}
+
+//获取柱状图数据
+export const getBarGraphData = (params)=>{
+    return http.get('/sales/bar/graph',params)
+}
